@@ -1,6 +1,6 @@
 /**
  * STRAWBERRY WHIMSY - CORE ENGINE
- * Fixed: Loading Screen Failsafe & Asset Management
+ * Updated: Loading Screen Completely Removed
  */
 
 const IMAGE_URLS = {
@@ -38,45 +38,39 @@ let activeDiag = null, diagIdx = 0, score = 0, winBerry = null, camera = {x:0, y
 let gameLoopId, lastTime = 0;
 
 /**
- * FAILSAFE BOOTLOADER
- * This ensures the loading screen ALWAYS disappears
+ * INSTANT BOOTLOADER
+ * Instantly displays the main menu and triggers background image caching
  */
 window.addEventListener('DOMContentLoaded', () => {
-    console.log("System: Initialization started...");
+    console.log("System: Running immediate boot...");
     
-    // Safety Timer: If images take too long, force start in 4 seconds
-    const forceStartTrigger = setTimeout(() => {
-        console.warn("System: Loading took too long. Forcing start...");
-        finalizeLoading();
-    }, 4000);
+    // 1. Instantly display menu and remove loading overlay
+    const loader = document.getElementById('loading-screen');
+    const menu = document.getElementById('menu-scene');
+    
+    if (loader) {
+        loader.classList.add('hidden');
+        loader.style.display = 'none';
+    }
+    if (menu) {
+        menu.classList.remove('hidden');
+        menu.style.display = 'block';
+    }
+    
+    buildMenu();
 
-    const loadPromises = Object.keys(IMAGE_URLS).map(key => {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous"; // Prevents some browser security hangs
-            img.src = IMAGE_URLS[key];
-            img.onload = () => { images[key] = img; resolve(); };
-            img.onerror = () => { 
-                console.error(`System: Failed to load ${key}. Skipping.`);
-                resolve(); // Resolve anyway to unblock the screen
-            };
-        });
-    });
-
-    Promise.all(loadPromises).then(() => {
-        clearTimeout(forceStartTrigger);
-        console.log("System: All assets ready.");
-        finalizeLoading();
+    // 2. Load images quietly in the background while the user is on the menu
+    Object.keys(IMAGE_URLS).forEach(key => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = IMAGE_URLS[key];
+        img.onload = () => { images[key] = img; };
     });
 });
 
 function finalizeLoading() {
+    // Left intact for compatibility, menu structure handles it now
     buildMenu();
-    const loader = document.getElementById('loading-screen');
-    const menu = document.getElementById('menu-scene');
-    
-    if (loader) loader.classList.add('hidden');
-    if (menu) menu.classList.remove('hidden');
 }
 
 /**
@@ -328,29 +322,3 @@ function resize() {
         canvas.height = window.innerHeight;
     }
 }
-
-// --- EMERGENCY LOADING ESCAPE HATCH ---
-// Forcefully unlocks the main menu if asset loaders freeze up
-(function forceGameUnlock() {
-    console.log("🌸 Force-start safety timer initialized...");
-    setTimeout(() => {
-        const loader = document.getElementById('loading-screen');
-        const menu = document.getElementById('menu-scene');
-        
-        if (loader && !loader.classList.contains('hidden')) {
-            console.warn("🌸 Image loader took too long or failed. Bypassing safely!");
-            loader.classList.add('hidden');
-            loader.style.display = 'none';
-            
-            if (menu) {
-                menu.classList.remove('hidden');
-                menu.style.display = 'block';
-                
-                // Fallback initialization if buildMenu exists
-                if (typeof buildMenu === 'function') {
-                    try { buildMenu(); } catch(e) { console.error("Menu build failed:", e); }
-                }
-            }
-        }
-    }, 1500); // 1.5-second hard limit
-})();
