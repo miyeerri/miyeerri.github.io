@@ -44,32 +44,6 @@ let gameLoopId, lastTime = 0;
 window.addEventListener('DOMContentLoaded', () => {
     console.log("System: Initialization started...");
     
-    // FORCE HIDE LOADING AFTER 2 SECONDS NO MATTER WHAT
-    const forceStartTrigger = setTimeout(() => {
-        console.warn("System: Loading took too long. Forcing start...");
-        finalizeLoading();
-    }, 2000);
-
-    const loadPromises = Object.keys(IMAGE_URLS).map(key => {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.src = IMAGE_URLS[key];
-            img.onload = () => { images[key] = img; resolve(); };
-            img.onerror = () => { 
-                console.error(`System: Failed to load ${key}.`);
-                resolve(); // Still resolve so it doesn't freeze the loading screen!
-            };
-        });
-    });
-
-    Promise.all(loadPromises).then(() => {
-        clearTimeout(forceStartTrigger);
-        console.log("System: All assets ready.");
-        finalizeLoading();
-    });
-});
-    
     // Safety Timer: If images take too long, force start in 4 seconds
     const forceStartTrigger = setTimeout(() => {
         console.warn("System: Loading took too long. Forcing start...");
@@ -354,6 +328,7 @@ function resize() {
         canvas.height = window.innerHeight;
     }
 }
+
 // --- EMERGENCY LOADING ESCAPE HATCH ---
 // Forcefully unlocks the main menu if asset loaders freeze up
 (function forceGameUnlock() {
