@@ -1,6 +1,6 @@
 /**
  * STRAWBERRY WHIMSY - CORE ENGINE
- * Updated: Loading Screen Completely Removed
+ * Updated: Loading Screen Hooks Cleaned Up
  */
 
 const IMAGE_URLS = {
@@ -39,27 +39,14 @@ let gameLoopId, lastTime = 0;
 
 /**
  * INSTANT BOOTLOADER
- * Instantly displays the main menu and triggers background image caching
  */
 window.addEventListener('DOMContentLoaded', () => {
-    console.log("System: Running immediate boot...");
+    console.log("System: Menu ready. Caching art assets safely...");
     
-    // 1. Instantly display menu and remove loading overlay
-    const loader = document.getElementById('loading-screen');
-    const menu = document.getElementById('menu-scene');
-    
-    if (loader) {
-        loader.classList.add('hidden');
-        loader.style.display = 'none';
-    }
-    if (menu) {
-        menu.classList.remove('hidden');
-        menu.style.display = 'block';
-    }
-    
+    // Instantly generate character profile data for the menu view
     buildMenu();
 
-    // 2. Load images quietly in the background while the user is on the menu
+    // Cache image files quietly while player interacts with the menu UI
     Object.keys(IMAGE_URLS).forEach(key => {
         const img = new Image();
         img.crossOrigin = "anonymous";
@@ -69,7 +56,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function finalizeLoading() {
-    // Left intact for compatibility, menu structure handles it now
     buildMenu();
 }
 
