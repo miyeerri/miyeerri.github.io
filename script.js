@@ -354,3 +354,28 @@ function resize() {
         canvas.height = window.innerHeight;
     }
 }
+// --- EMERGENCY LOADING ESCAPE HATCH ---
+// Forcefully unlocks the main menu if asset loaders freeze up
+(function forceGameUnlock() {
+    console.log("🌸 Force-start safety timer initialized...");
+    setTimeout(() => {
+        const loader = document.getElementById('loading-screen');
+        const menu = document.getElementById('menu-scene');
+        
+        if (loader && !loader.classList.contains('hidden')) {
+            console.warn("🌸 Image loader took too long or failed. Bypassing safely!");
+            loader.classList.add('hidden');
+            loader.style.display = 'none';
+            
+            if (menu) {
+                menu.classList.remove('hidden');
+                menu.style.display = 'block';
+                
+                // Fallback initialization if buildMenu exists
+                if (typeof buildMenu === 'function') {
+                    try { buildMenu(); } catch(e) { console.error("Menu build failed:", e); }
+                }
+            }
+        }
+    }, 1500); // 1.5-second hard limit
+})();
