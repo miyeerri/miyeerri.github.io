@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glutek Birthday</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- The Game World -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- The Interactive UI Layer -->
+    <div id="ui-layer">
+        
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="overlay-full glass">
+            <div class="card bounce">
+                <h2>✿ loading...</h2>
+                <div class="loader-bar"><div class="loader-fill"></div></div>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <section id="menu-scene" class="overlay-full glass hidden">
+            <div class="card">
+                <div class="title-container">
+                    <h1 class="title">Glutek<br><span>Adventure </span></h1>
+                </div>
+                <p class="subtitle">Use WASD or Arrows to move.</p>
+                <div class="btn-group">
+                    <button class="btn primary" onclick="startGame()">♡ START</button>
+                    <button class="btn secondary" onclick="toggleChars(true)">CHARACTERS ♡</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inhabitants Gallery (Fixed & Clickable) -->
+        <section id="chars-scene" class="overlay-full glass hidden">
+            <div class="card wide">
+                <button class="close-btn" onclick="toggleChars(false)">×</button>
+                <div class="gallery-header">
+                    <h2>Meet the Characters!</h2>
+                </div>
+                <div id="char-grid"></div>
+            </div>
+        </section>
+
+        <!-- In-Game HUD -->
+        <div id="hud" class="hidden">
+            <div class="pill tooltip">
+                <img src="https://i.imgur.com/6pEJphN.png" alt="Friends"> 
+                <span id="f-count">0</span> / 4
+            </div>
+            <div class="pill tooltip">
+                <img src="https://i.imgur.com/hRGRObU.png" alt="Berries"> 
+                <span id="b-count">0</span> / 10
+            </div>
+        </div>
+
+        <!-- Quest Alert (Pops up when ready) -->
+        <div id="quest-alert" class="hidden">
+            <div class="alert-content bounce">
+                <h2>QUEST COMPLETE! ˘ᗜ˘</h2>
+                <p>The path is open! Follow the compass for the Gift.</p>
+            </div>
+        </div>
+
+        <!-- Dialogue Box -->
+        <div id="dialogue-ui" class="hidden" onclick="advanceDialogue()">
+            <div class="diag-box">
+                <img id="diag-portrait" src="">
+                <div class="diag-content">
+                    <p id="diag-text"></p>
+                    <small class="pulse-text">▼ Click anywhere to continue...</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENDING MENU WITH CHANGEABLE LINK -->
+        <section id="end-scene" class="overlay-full glass hidden">
+            <div class="card">
+                <h1 class="title-small">Gift found ♡</h1>
+                <p class="end-text">You gathered your friends, collected the sweet berries, and found the gift!</p>
+                <div class="btn-group">
+                    <button class="btn primary" onclick="location.reload()">♡ useless button</button>
+                    
+                    <!-- !!! CHANGE THIS LINK TO WHATEVER YOU WANT !!! -->
+                    <a href="https://youtu.be/dQw4w9WgXcQ?si=8WFQAiVBw6cvDxTF" target="_blank" class="btn link-btn">click this ♡</a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
